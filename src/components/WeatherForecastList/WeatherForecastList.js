@@ -37,6 +37,18 @@ const WeatherForecastList = styled.div`
       border-right: 1px solid #ccc;
     }
   }
+
+  @media (max-width: 600px) {
+    display: inline;
+
+    > div {
+      padding: 2rem 0;
+
+      &:nth-child(even) {
+        background: #ddd;
+      }
+    }
+  }
 `;
 
 export default ({ cityName }) => {
