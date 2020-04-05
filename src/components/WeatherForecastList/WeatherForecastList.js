@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import get from 'lodash/get';
+import DailyForecastListItem from '../DailyForecastListItem/DailyForecastListItem';
 
 const API_BASE_URL = 'http://api.openweathermap.org/data/2.5';
 const OPENWEATHER_API_KEY = '927ba7bebf60c07e4ecef3eb658be4a1';
@@ -26,6 +27,7 @@ export default ({ cityName }) => {
   const fiveDayForecastURL = buildFiveDayForecastURL(cityName);
   const [isError, setIsError] = useState(false);
   const [weatherData, setWeatherData] = useState({});
+  const fiveDaySummary = get(weatherData, 'data.daily', []).slice(0, 5);
 
   useEffect(() => {
     const fetchForecast = async () => {
@@ -57,11 +59,18 @@ export default ({ cityName }) => {
         </div>
       )}
 
-      { !isError && weatherData && (
+      { !isError && fiveDaySummary && (
         <>
           <div>{`Forecast for ${cityName}`}</div>
 
-          <div>{JSON.stringify(weatherData)}</div>
+          <div>
+            { fiveDaySummary.map((dailyForecastData) => (
+              <DailyForecastListItem
+                key={`key-daily-${dailyForecastData.dt}`}
+                data={dailyForecastData}
+              />
+            ))}
+          </div>
         </>
       )}
     </div>

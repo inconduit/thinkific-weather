@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import WeatherForecast from './components/WeatherForecast/WeatherForecast';
+import WeatherForecastList from './components/WeatherForecastList/WeatherForecastList';
 
 function App() {
   return (
     <div className="App">
-      <WeatherForecast cityName='Vancouver' />
+      <WeatherForecastList cityName='Vancouver' />
     </div>
   );
 }
