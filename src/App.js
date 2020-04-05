@@ -1,12 +1,19 @@
-import React from 'react';
-import './App.css';
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import WeatherForecastList from './components/WeatherForecastList/WeatherForecastList';
 
+const AppContainer = styled.div`
+  text-align: center;
+`;
+
 function App() {
+  const [cityName] = useState('Vancouver');
+
   return (
-    <div className="App">
-      <WeatherForecastList cityName='Vancouver' />
-    </div>
+    <AppContainer>
+      <h1>{cityName}</h1>
+      <WeatherForecastList cityName={cityName} />
+    </AppContainer>
   );
 }
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import get from 'lodash/get';
+import styled from 'styled-components';
 import DailyForecastListItem from '../DailyForecastListItem/DailyForecastListItem';
 
 const API_BASE_URL = 'http://api.openweathermap.org/data/2.5';
@@ -22,6 +23,21 @@ const buildOneCallForecastURL = (latitude, longitude) => (
     `&units=metric` +
     `&appid=${OPENWEATHER_API_KEY}`
 );
+
+const WeatherForecastList = styled.div`
+  display: flex;
+  margin: 0 auto;
+  max-width: 700px;
+
+  > div {
+    flex: 1 1 auto;
+    padding: 0 0.8rem;
+
+    &:not(:last-of-type) {
+      border-right: 1px solid #ccc;
+    }
+  }
+`;
 
 export default ({ cityName }) => {
   const fiveDayForecastURL = buildFiveDayForecastURL(cityName);
@@ -53,25 +69,21 @@ export default ({ cityName }) => {
 
   return (
     <div>
-      { isError && (
+      {isError && (
         <div>
           {`Error loading forecast for city: ${cityName}`}
         </div>
       )}
 
-      { !isError && fiveDaySummary && (
-        <>
-          <div>{`Forecast for ${cityName}`}</div>
-
-          <div>
-            { fiveDaySummary.map((dailyForecastData) => (
-              <DailyForecastListItem
-                key={`key-daily-${dailyForecastData.dt}`}
-                data={dailyForecastData}
-              />
-            ))}
-          </div>
-        </>
+      {!isError && fiveDaySummary && (
+        <WeatherForecastList>
+          { fiveDaySummary.map((dailyForecastData) => (
+            <DailyForecastListItem
+              key={`key-daily-${dailyForecastData.dt}`}
+              data={dailyForecastData}
+            />
+          ))}
+        </WeatherForecastList>
       )}
     </div>
   );
