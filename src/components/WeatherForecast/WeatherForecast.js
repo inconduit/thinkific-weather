@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import get from 'lodash/get';
 
+const API_BASE_URL = 'http://api.openweathermap.org/data/2.5';
 const OPENWEATHER_API_KEY = '927ba7bebf60c07e4ecef3eb658be4a1';
+const VANCOUVER_LAT = '49.2497';
+const VANCOUVER_LONG = '-123.1193';
 
-const buildForecastURL = (cityName) => (
-  `http://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${OPENWEATHER_API_KEY}`
+const buildFiveDayForecastURL = (cityName) => (
+  `${API_BASE_URL}/forecast?` +
+    `q=${cityName}` +
+    `&units=metric` +
+    `&appid=${OPENWEATHER_API_KEY}`
+);
+
+const buildOneCallForecastURL = (latitude, longitude) => (
+  `${API_BASE_URL}/onecall?` +
+    `lat=${latitude}` +
+    `&lon=${longitude}` +
+    `&units=metric` +
+    `&appid=${OPENWEATHER_API_KEY}`
 );
 
 export default ({ cityName }) => {
-  const forecastURL = buildForecastURL(cityName);
+  const fiveDayForecastURL = buildFiveDayForecastURL(cityName);
   const [isError, setIsError] = useState(false);
   const [weatherData, setWeatherData] = useState({});
 
@@ -17,9 +32,15 @@ export default ({ cityName }) => {
       setIsError(false);
 
       try {
-        const result = await axios(forecastURL);
+        let latitude, longitude, oneCallForecastURL, oneCallResult;
+        const fiveDayResult = await axios(fiveDayForecastURL);
 
-        setWeatherData(result);
+        latitude = get(fiveDayResult, 'data.city.coord.lat');
+        longitude = get(fiveDayResult, 'data.city.coord.lon');
+        oneCallForecastURL = buildOneCallForecastURL(latitude, longitude);
+        oneCallResult = await axios(oneCallForecastURL);
+
+        setWeatherData(oneCallResult);
       } catch (error) {
         setIsError(true);
       }
