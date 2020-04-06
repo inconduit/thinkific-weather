@@ -77,7 +77,7 @@ export default ({ cityName }) => {
     }
 
     fetchForecast();
-  }, []);
+  }, [cityName]);
 
   return (
     <div>
